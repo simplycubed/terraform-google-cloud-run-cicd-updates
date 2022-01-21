@@ -147,6 +147,9 @@ In addition to the inputs documented above, the following values are available a
 
 ## Changelog
 
+- **2.2.1**
+  - Updated README
+
 - **2.2.0**
   - Updated `lifecycle` `ignore_changes` block to support image updates via CI/CD pipeline.
 
