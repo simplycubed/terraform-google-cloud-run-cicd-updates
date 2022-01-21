@@ -4,8 +4,8 @@ A Terraform module for the [Google Cloud Platform](https://cloud.google.com) tha
 
 ## Important
 
-- This module is designed to provision Cloud Run modules with Terraform and update the images via a CI/CD pipeline.
-- For Terraform only deployments and updates it is recommended to use [simplycubed/terraform-google-cloud-run](https://github.com/simplycubed/terraform-google-cloud-run).
+- This module is designed to provision Cloud Run with Terraform and update the images using CI/CD pipelines.
+- For Terraform-only managed deployments and updates please use [simplycubed/terraform-google-cloud-run](https://github.com/simplycubed/terraform-google-cloud-run) or the [source](https://github.com/garbetjie/terraform-google-cloud-run) project.
 
 ## Table of contents
 
@@ -40,7 +40,7 @@ might not be the best for you.
 
 ```hcl-terraform
 module my_cloud_run_service {
-  source = "simplycubed/cloud-run/google"
+  source = "simplycubed/cloud-run-cicd-updates/google"
   version = "~> 2"
   
   # Required parameters
