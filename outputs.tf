@@ -65,8 +65,10 @@ output "env" {
   description = "Environment variables injected into container instances."
 }
 
+# TODO: Error: Invalid index
+# https://github.com/simplycubed/terraform-google-cloud-run-cicd-updates/issues/1
 output "execution_environment" {
-  value       = google_cloud_run_service.default.template[0].metadata[0].annotations["run.googleapis.com/execution-environment"]
+  value       = toset(flatten(google_cloud_run_service.default.template[0].metadata[0].annotations["run.googleapis.com/execution-environment"]))
   description = "Execution environment container instances are running under."
 }
 
@@ -75,8 +77,10 @@ output "http2" {
   description = "Status of HTTP/2 end-to-end handling."
 }
 
+# TODO: Error: Invalid index
+# https://github.com/simplycubed/terraform-google-cloud-run-cicd-updates/issues/1
 output "ingress" {
-  value       = google_cloud_run_service.default.metadata[0].annotations["run.googleapis.com/ingress"]
+  value       = toset(flatten(google_cloud_run_service.default.metadata[0].annotations["run.googleapis.com/ingress"]))
   description = "Ingress settings applied to the service."
 }
 
