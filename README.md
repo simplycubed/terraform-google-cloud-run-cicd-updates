@@ -9,16 +9,20 @@ A Terraform module for the [Google Cloud Platform](https://cloud.google.com) tha
 
 ## Table of contents
 
-- [Introduction](#introduction)
-- [Requirements](#requirements)
-- [Usage](#usage)
-- [Secrets & Volumes](#secrets--volumes)
-- [Inputs](#inputs)
-  - [Required](#required-inputs)
-  - [Optional](#optional-inputs)
-- [Outputs](#outputs)
-- [Changelog](#changelog)
-- [Roadmap](#roadmap)
+- [Terraform Module: Google Cloud Run - CICD Updates](#terraform-module-google-cloud-run---cicd-updates)
+  - [Important](#important)
+  - [Table of contents](#table-of-contents)
+  - [Introduction](#introduction)
+  - [Requirements](#requirements)
+  - [Usage](#usage)
+  - [Secrets \& Volumes](#secrets--volumes)
+  - [Inputs](#inputs)
+    - [Required inputs](#required-inputs)
+    - [Optional inputs](#optional-inputs)
+  - [Outputs](#outputs)
+  - [Changelog](#changelog)
+  - [Roadmap](#roadmap)
+  - [Credits](#credits)
 
 ## Introduction
 
@@ -54,9 +58,11 @@ module my_cloud_run_service {
   cloudsql_connections = []
   concurrency = 80
   cpu_throttling = true
+  execution_environment = "gen2"
   cpus = 1
   entrypoint = []
   env = [{ key = "ENV_VAR_KEY", value = "ENV_VAR_VALUE" }]
+  execution_environment = "gen1"
   ingress = "all"
   labels = {}
   map_domains = []
@@ -92,7 +98,7 @@ Refer to [Cloud Run > Documentation > Guides > Using secrets](https://cloud.goog
 ### Required inputs
 
 | Name     | Description                                                                          | Type   |
-|----------|--------------------------------------------------------------------------------------|--------|
+| -------- | ------------------------------------------------------------------------------------ | ------ |
 | name     | Name of the service.                                                                 | string |
 | image    | Docker image name. Must be hosted in Google Container Registry or Artifact Registry. | string |
 | location | Location of the service.                                                             | string |
@@ -100,7 +106,7 @@ Refer to [Cloud Run > Documentation > Guides > Using secrets](https://cloud.goog
 ### Optional inputs
 
 | Name                  | Description                                                                                                                                                                        | Type                                                                                                           | Default                               | Required |
-|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|---------------------------------------|----------|
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- | ------------------------------------- | -------- |
 | allow_public_access   | Allow unauthenticated access to the service.                                                                                                                                       | bool                                                                                                           | `true`                                | No       |
 | args                  | Arguments to pass to the entrypoint.                                                                                                                                               | list(string)                                                                                                   | `[]`                                  | No       |
 | cloudsql_connections  | Cloud SQL connections to attach to container instances.                                                                                                                            | set(string)                                                                                                    | `[]`                                  | No       |
@@ -113,12 +119,13 @@ Refer to [Cloud Run > Documentation > Guides > Using secrets](https://cloud.goog
 | env.*.value           | Raw string value of the environment variable.                                                                                                                                      | optional(string)                                                                                               | `null`                                | No       |
 | env.*.secret          | Secret to populate the environment variable from. Secrets in other projects should use the `projects/{{project}}/secrets/{{secret}}` format.                                       | optional(string)                                                                                               | `null`                                | No       |
 | env.*.version         | Version to use when populating with a secret. Defaults to the latest version.                                                                                                      | string                                                                                                         | `"latest"`                            | No       |
+| execution_environment | Execution environment to run under. Allowed values: [`"gen1"`, `"gen2"`]                                                                                                           | string                                                                                                         | `"gen1"`                              | No       |
 | http2                 | Enable use of HTTP/2 end-to-end.                                                                                                                                                   | bool                                                                                                           | `false`                               | No       |
 | ingress               | Ingress settings for the service. Allowed values: [`"all"`, `"internal"`, `"internal-and-cloud-load-balancing"`]                                                                   | string                                                                                                         | `all`                                 | No       |
 | labels                | [Labels](https://cloud.google.com/run/docs/configuring/labels) to apply to the service.                                                                                            | map(string)                                                                                                    | `{}`                                  | No       |
 | map_domains           | Domain names to map to the service.                                                                                                                                                | set(string)                                                                                                    | `[]`                                  | No       |
 | max_instances         | Maximum number of container instances allowed to start.                                                                                                                            | number                                                                                                         | `1000`                                | No       |
-| memory                | Memory (in Mi) to allocate to containers.                                                                                                                                          | number                                                                                                         | `256`                                 | No       |
+| memory                | Memory (in Mi) to allocate to containers. If `execution_environment` is `"gen2"`, this needs to be >= 512.                                                                         | number                                                                                                         | `256`                                 | No       |
 | min_instances         | Minimum number of container instances to keep running.                                                                                                                             | number                                                                                                         | `0`                                   | No       |
 | port                  | Port on which the container is listening for incoming HTTP requests.                                                                                                               | number                                                                                                         | `8080`                                | No       |
 | project               | Google Cloud project in which to create resources.                                                                                                                                 | string                                                                                                         | `null`                                | No       |
@@ -138,7 +145,7 @@ Refer to [Cloud Run > Documentation > Guides > Using secrets](https://cloud.goog
 In addition to the inputs documented above, the following values are available as outputs:
 
 | Name                         | Description                                                                                                | Type                                                                                                |
-|------------------------------|------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------|
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
 | latest_ready_revision_name   | Latest revision ready for use.                                                                             | string                                                                                              |
 | latest_created_revision_name | Last revision created.                                                                                     | string                                                                                              |
 | url                          | URL at which the service is available.                                                                     | string                                                                                              |

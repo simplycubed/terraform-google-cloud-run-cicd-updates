@@ -114,10 +114,11 @@ resource "google_cloud_run_service" "default" {
       labels = var.labels
       annotations = merge(
         {
-          "run.googleapis.com/cpu-throttling"     = var.cpu_throttling
-          "run.googleapis.com/cloudsql-instances" = join(",", var.cloudsql_connections)
-          "autoscaling.knative.dev/maxScale"      = var.max_instances
-          "autoscaling.knative.dev/minScale"      = var.min_instances
+          "run.googleapis.com/cpu-throttling"        = var.cpu_throttling
+          "run.googleapis.com/cloudsql-instances"    = join(",", var.cloudsql_connections)
+          "autoscaling.knative.dev/maxScale"         = var.max_instances
+          "autoscaling.knative.dev/minScale"         = var.min_instances
+          "run.googleapis.com/execution-environment" = var.execution_environment
         },
         local.vpc_access.connector == null ? {} : {
           "run.googleapis.com/vpc-access-connector" = local.vpc_access.connector

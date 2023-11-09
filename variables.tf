@@ -79,6 +79,12 @@ variable "env" {
   }
 }
 
+variable "execution_environment" {
+  type        = string
+  default     = "gen1"
+  description = "Execution environment to run container instances under."
+}
+
 variable "http2" {
   type        = bool
   default     = false
@@ -117,7 +123,7 @@ variable "max_instances" {
 variable "memory" {
   type        = number
   default     = 256
-  description = "Memory (in Mi) to allocate to containers."
+  description = "Memory (in Mi) to allocate to containers. Minimum of 512Mi is required when `execution_environment` is `\"gen2\"`."
 }
 
 variable "min_instances" {
